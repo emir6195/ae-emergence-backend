@@ -14,13 +14,13 @@ const corsOptions = {
 app.use(cors(corsOptions))
 app.use(express.json());
 app.use(require('./middleware/logger'));
-app.use(require('./middleware/secure'));
+// app.use(require('./middleware/secure'));
 
 // API'S
 app.use(require('./routes/auth'));
 app.use(require('./routes/employee'));
 app.use(require('./routes/upload'));
-
+app.use(require('./routes/sms'));
 //POST PROCESS
 app.use(require('./middleware/error'));
 
