@@ -6,8 +6,8 @@ const outgoingSmsModal = require('../models/outgoing-sms.model');
 
 router.post('/stats', async (req, res, next) => {
     try {
-        let begin_date = req.body.begin_date || new Date(new Date().getTime() - (1000 * 60 * 60 * 24 * 7)).toISOString().split('T')[0];
-        let end_date = req.body.end_date || new Date().toISOString().split('T')[0];
+        let begin_date = req.body.begin_date || new Date(new Date().getTime() - (1000 * 60 * 60 * 21 * 7)).toISOString().split('T')[0];
+        let end_date = req.body.end_date || new Date(new Date().getTime() + (1000 * 60 * 60 * 3 )).toISOString().split('T')[0];
         let date_labels = createDateLabels(begin_date, end_date);
         let countOfEmployees = await employeesModal.countDocuments();
         let incomingMessages = await incomingSmsModal.find(
@@ -52,7 +52,8 @@ router.post('/stats', async (req, res, next) => {
                     borderRadius: 25,
                     borderWidth: 2
                 }
-            ]
+            ],
+            outgoingMessages,
         });
     } catch (error) {
         console.log(error);
@@ -64,7 +65,6 @@ function createDateLabels(begin_date, end_date) {
     let date_labels = [];
     begin_date = new Date(Date.parse(begin_date));
     end_date = new Date(Date.parse(end_date));
-    console.log(begin_date, end_date);
     while (begin_date <= end_date) {
         date_labels.push(begin_date.toISOString().split('T')[0]);
         begin_date = new Date(begin_date.getTime() + (1000 * 60 * 60 * 24));

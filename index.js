@@ -21,6 +21,7 @@ app.use(require('./routes/auth'));
 app.use(require('./routes/employee'));
 app.use(require('./routes/upload'));
 app.use(require('./routes/sms'));
+app.use(require('./routes/stats'));
 //POST PROCESS
 app.use(require('./middleware/error'));
 

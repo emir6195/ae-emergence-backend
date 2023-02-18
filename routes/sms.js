@@ -1,11 +1,19 @@
 const router = require('express').Router();
 const incomingSmsModel = require('../models/incoming-sms.model');
 const outgoingSmsModel = require('../models/outgoing-sms.model');
+const employeesModal = require('../models/employee.model');
 
 router.post('/send-sms', async (req,res,next) => {
     try {
         // TO DO
-        let status = await outgoingSmsModel.create(req.body);
+        let data = req.body;
+        let employee_name = await employeesModal.findOne({msisdn: data.to});
+        if (employee_name) {
+            data.employee = `${employee_name.name || "unknown"} ${employee_name.surname || "employee"}`;
+        } else {
+            data.employee = "unknown employee";
+        }
+        let status = await outgoingSmsModel.create(data);
         res.send({status:status});
     } catch (error) {
         console.log(error);
@@ -17,8 +25,12 @@ router.post('/get-sms', async (req,res,next) => {
     try {
         // TO DO
         let data = req.body;
-        let answered_message_id = await outgoingSmsModel.findOne({to: data.from}, {}, {sort : {'createdAt' : -1}});
-        data.answered_message_id = answered_message_id;
+        let outgoingSms = await outgoingSmsModel.findOne({to: data.from}, {}, {sort : {'createdAt' : -1}});
+        let update_outgoing = await outgoingSmsModel.updateOne({to:data.from}, {isAnswered: true});
+        data.answered_message_id = outgoingSms._id;
+        data.message_received_date = outgoingSms.createdAt;
+        data.received_message = outgoingSms.message;
+        data.employee = `${outgoingSms.employee}`;
         let status = await incomingSmsModel.create(data);
         res.send({status:status});
     } catch (error) {
