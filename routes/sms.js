@@ -2,6 +2,22 @@ const router = require('express').Router();
 const incomingSmsModel = require('../models/incoming-sms.model');
 const outgoingSmsModel = require('../models/outgoing-sms.model');
 const employeesModal = require('../models/employee.model');
+const Netgsm = require('../core/netgsm');
+const netgsm = new Netgsm();
+
+
+router.post('/send-multi-sms', (req, res, next) => {
+    try {
+        let gsm_list = req.body.gsm_list;
+        let sms_header = req.body.sms_header;
+        let sms_content = req.body.sms_content;
+        netgsm.sendSms(sms_header, sms_content, gsm_list);
+        res.send({message:'Netgsm process started!'});
+    } catch (error) {
+        console.log(error);
+        next(error);
+    }
+});
 
 router.post('/send-sms', async (req,res,next) => {
     try {

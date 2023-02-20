@@ -61,6 +61,22 @@ router.post('/stats', async (req, res, next) => {
     }
 });
 
+router.get('/cities-districts', async (req,res,next) => {
+    try {
+        let cities = await employeesModal.find({}).distinct('city');
+        let districts = await employeesModal.find({}).distinct('district');
+        res.send(
+            {
+                cities,
+                districts
+            }
+        );
+    } catch (error) {
+        console.log(error);
+        next(error)
+    }
+})
+
 function createDateLabels(begin_date, end_date) {
     let date_labels = [];
     begin_date = new Date(Date.parse(begin_date));

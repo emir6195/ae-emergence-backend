@@ -1,0 +1,6 @@
+services: 
+    ae-emergence-app:
+        image: emir6195/ae-emergence-app:latest
+        restart: ${RESTART_POLICY:-unless-stopped}
+        ports: 
+            - 3000:3000

@@ -1,8 +1,12 @@
 const Jwt = require('../core/jwt');
 const tokenValidator = new Jwt();
 
+const allowed = ['/api/user/login', '/api/user/register']
+
 module.exports = function (req, res, next) {
-    if (req.originalUrl == '/user/login' || req.originalUrl == '/user/register' ) {
+    if (!req.originalUrl.startsWith('/api')) {
+        next();
+    } else if (allowed.includes(req.originalUrl)) {
         next();
     } else {
         let token = req.header('Authorization');

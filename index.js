@@ -18,7 +18,7 @@ const corsOptions = {
 app.use(cors(corsOptions))
 app.use(express.json());
 app.use('/api', require('./middleware/logger'));
-// app.use(require('./middleware/secure'));
+app.use(require('./middleware/secure'));
 
 // API'S
 app.use('/api', require('./routes/auth'));
@@ -49,6 +49,7 @@ const serve = async () => {
     try {
         await mongoose.connect(
             "mongodb://127.0.0.1:27017/ae-emergence"
+            // "mongodb://host.docker.internal:27017/ae-emergence"
         );
         app.listen(3000, () => console.log("Server started on port 3000!"));
     } catch (error) {
